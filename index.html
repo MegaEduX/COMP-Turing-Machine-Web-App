@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Turing Machine</title>
 	</head>
 	
 	<body>
+		
+		<div>
+			<textarea id="turingInput"></textarea>
+		</div>
+		
 		<script src="lib/require.js"></script>
+		<script src="grammar/TuringMachineLexer.js"></script>
+		<script src="grammar/TuringMachineListener.js"></script>
+		<script src="grammar/TuringMachineParser.js"></script>
 		
 		<script>
-			var antlr4 = require("antlr4/index");
+			//	var input = document.getElementById("turingInput").value;
+			
+			function evaluate(input) {
+				var antlr4 = require("antlr4/index");
+				
+				var chars = new antlr4.InputStream(input);
+				var lexer = new TuringMachineLexer.TuringMachineLexer(chars);
+				
+				var tokens = new antlr4.CommonTokenStream(lexer);
+				
+				var parser = new TuringMachineParser.TuringMachineParser(tokens);
+				
+				parser.buildParseTrees = true;
+				
+				var tree = parser.StartRule();
+			}
 		</script>
 	</body>
 </html>
