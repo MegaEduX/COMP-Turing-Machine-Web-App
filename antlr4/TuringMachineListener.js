@@ -5,42 +5,8 @@ var antlr4 = require('antlr4/index');
 // This class defines a complete listener for a parse tree produced by TuringMachineParser.
 function TuringMachineListener() {
 	antlr4.tree.ParseTreeListener.call(this);
-	
-	this.queue = [];
-	this.currentStateDef = null;
-	
-	this.states = [];
-	
 	return this;
 }
-
-//
-//		Tuple Class
-//
-
-function Tuple(cs, nsy, d, nst) {
-	this.currentSymbol = cs;
-	this.nextSymbol = nsy;
-	this.direction = d;
-	this.nextState = nst;
-}
-
-//
-//		State Class
-//
-
-function State(stateName) {
-	this.name = stateName;
-	this.tuples = [];
-}
-
-State.prototype.addTuple = function(tuple) {
-	this.tuples.push(tuple);
-}
-
-//
-//		Listener
-//
 
 TuringMachineListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
 TuringMachineListener.prototype.constructor = TuringMachineListener;
@@ -56,12 +22,10 @@ TuringMachineListener.prototype.exitR = function(ctx) {
 
 // Enter a parse tree produced by TuringMachineParser#statedef.
 TuringMachineListener.prototype.enterStatedef = function(ctx) {
-	this.currentStateDef = null;
 };
 
 // Exit a parse tree produced by TuringMachineParser#statedef.
 TuringMachineListener.prototype.exitStatedef = function(ctx) {
-	this.states.push(this.currentStateDef);
 };
 
 
@@ -71,9 +35,6 @@ TuringMachineListener.prototype.enterTuple = function(ctx) {
 
 // Exit a parse tree produced by TuringMachineParser#tuple.
 TuringMachineListener.prototype.exitTuple = function(ctx) {
-	var tuple = new Tuple(this.queue.shift(), this.queue.shift(), this.queue.shift(), this.queue.shift());
-	
-	this.currentStateDef.addTuple(tuple);
 };
 
 
@@ -83,10 +44,15 @@ TuringMachineListener.prototype.enterStatename = function(ctx) {
 
 // Exit a parse tree produced by TuringMachineParser#statename.
 TuringMachineListener.prototype.exitStatename = function(ctx) {
-	if (this.currentStateDef == null)
-		this.currentStateDef = new State(ctx.getText());
-	else
-		this.queue.push(ctx.getText());
+};
+
+
+// Enter a parse tree produced by TuringMachineParser#state.
+TuringMachineListener.prototype.enterState = function(ctx) {
+};
+
+// Exit a parse tree produced by TuringMachineParser#state.
+TuringMachineListener.prototype.exitState = function(ctx) {
 };
 
 
@@ -96,7 +62,6 @@ TuringMachineListener.prototype.enterSymbol = function(ctx) {
 
 // Exit a parse tree produced by TuringMachineParser#symbol.
 TuringMachineListener.prototype.exitSymbol = function(ctx) {
-	this.queue.push(ctx.getText());
 };
 
 
@@ -106,7 +71,8 @@ TuringMachineListener.prototype.enterDir = function(ctx) {
 
 // Exit a parse tree produced by TuringMachineParser#dir.
 TuringMachineListener.prototype.exitDir = function(ctx) {
-	this.queue.push(ctx.getText());
 };
+
+
 
 exports.TuringMachineListener = TuringMachineListener;

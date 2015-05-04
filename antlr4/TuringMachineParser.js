@@ -5,17 +5,17 @@ var TuringMachineListener = require('./TuringMachineListener').TuringMachineList
 var grammarFileName = "TuringMachine.g4";
 
 var serializedATN = ["\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
-    "\3\16*\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n",
-    "\2\r\2\16\2\21\3\3\3\3\3\3\3\3\3\3\6\3\31\n\3\r\3\16\3\32\3\3\3\3\3",
-    "\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\2\2\b\2\4\6\b\n\f\2\4",
-    "\4\2\t\t\f\r\4\2\3\4\f\f%\2\17\3\2\2\2\4\23\3\2\2\2\6\36\3\2\2\2\b#",
-    "\3\2\2\2\n%\3\2\2\2\f\'\3\2\2\2\16\20\5\4\3\2\17\16\3\2\2\2\20\21\3",
-    "\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\3\3\2\2\2\23\24\7\5\2\2\24\25",
-    "\5\b\5\2\25\26\7\6\2\2\26\30\7\7\2\2\27\31\5\6\4\2\30\27\3\2\2\2\31",
-    "\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34\35\7\b\2\2",
-    "\35\5\3\2\2\2\36\37\5\n\6\2\37 \5\n\6\2 !\5\f\7\2!\"\5\b\5\2\"\7\3\2",
-    "\2\2#$\7\n\2\2$\t\3\2\2\2%&\t\2\2\2&\13\3\2\2\2\'(\t\3\2\2(\r\3\2\2",
-    "\2\4\21\32"].join("");
+    "\3\16.\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\6",
+    "\2\22\n\2\r\2\16\2\23\3\3\3\3\3\3\3\3\3\3\6\3\33\n\3\r\3\16\3\34\3\3",
+    "\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3\b\3\b\2\2\t\2",
+    "\4\6\b\n\f\16\2\4\4\2\t\t\f\r\4\2\3\4\f\f(\2\21\3\2\2\2\4\25\3\2\2\2",
+    "\6 \3\2\2\2\b%\3\2\2\2\n\'\3\2\2\2\f)\3\2\2\2\16+\3\2\2\2\20\22\5\4",
+    "\3\2\21\20\3\2\2\2\22\23\3\2\2\2\23\21\3\2\2\2\23\24\3\2\2\2\24\3\3",
+    "\2\2\2\25\26\7\5\2\2\26\27\5\b\5\2\27\30\7\6\2\2\30\32\7\7\2\2\31\33",
+    "\5\6\4\2\32\31\3\2\2\2\33\34\3\2\2\2\34\32\3\2\2\2\34\35\3\2\2\2\35",
+    "\36\3\2\2\2\36\37\7\b\2\2\37\5\3\2\2\2 !\5\f\7\2!\"\5\f\7\2\"#\5\16",
+    "\b\2#$\5\n\6\2$\7\3\2\2\2%&\7\n\2\2&\t\3\2\2\2\'(\7\n\2\2(\13\3\2\2",
+    "\2)*\t\2\2\2*\r\3\2\2\2+,\t\3\2\2,\17\3\2\2\2\4\23\34"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -31,7 +31,8 @@ var symbolicNames = [ 'null', 'null', 'null', "SN_BEG", "SN_END", "STATE_BEG",
                       "STATE_END", "ALPNUM", "ALPNUM_PLUS", "WHITESP", "WILDCARD", 
                       "UNDERSC", "COMMENT" ];
 
-var ruleNames =  [ "r", "statedef", "tuple", "statename", "symbol", "dir" ];
+var ruleNames =  [ "r", "statedef", "tuple", "statename", "state", "symbol", 
+                   "dir" ];
 
 function TuringMachineParser (input) {
 	antlr4.Parser.call(this, input);
@@ -69,8 +70,9 @@ TuringMachineParser.RULE_r = 0;
 TuringMachineParser.RULE_statedef = 1;
 TuringMachineParser.RULE_tuple = 2;
 TuringMachineParser.RULE_statename = 3;
-TuringMachineParser.RULE_symbol = 4;
-TuringMachineParser.RULE_dir = 5;
+TuringMachineParser.RULE_state = 4;
+TuringMachineParser.RULE_symbol = 5;
+TuringMachineParser.RULE_dir = 6;
 
 function RContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -123,13 +125,13 @@ TuringMachineParser.prototype.r = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 13; 
+        this.state = 15; 
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         do {
-            this.state = 12;
+            this.state = 14;
             this.statedef();
-            this.state = 15; 
+            this.state = 17; 
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         } while(_la===TuringMachineParser.SN_BEG);
@@ -218,25 +220,25 @@ TuringMachineParser.prototype.statedef = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 17;
-        this.match(TuringMachineParser.SN_BEG);
-        this.state = 18;
-        this.statename();
         this.state = 19;
-        this.match(TuringMachineParser.SN_END);
+        this.match(TuringMachineParser.SN_BEG);
         this.state = 20;
+        this.statename();
+        this.state = 21;
+        this.match(TuringMachineParser.SN_END);
+        this.state = 22;
         this.match(TuringMachineParser.STATE_BEG);
-        this.state = 22; 
+        this.state = 24; 
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         do {
-            this.state = 21;
+            this.state = 23;
             this.tuple();
-            this.state = 24; 
+            this.state = 26; 
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC))) !== 0));
-        this.state = 26;
+        this.state = 28;
         this.match(TuringMachineParser.STATE_END);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -283,8 +285,8 @@ TupleContext.prototype.dir = function() {
     return this.getTypedRuleContext(DirContext,0);
 };
 
-TupleContext.prototype.statename = function() {
-    return this.getTypedRuleContext(StatenameContext,0);
+TupleContext.prototype.state = function() {
+    return this.getTypedRuleContext(StateContext,0);
 };
 
 TupleContext.prototype.enterRule = function(listener) {
@@ -310,14 +312,14 @@ TuringMachineParser.prototype.tuple = function() {
     this.enterRule(localctx, 4, TuringMachineParser.RULE_tuple);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 28;
-        this.symbol();
-        this.state = 29;
-        this.symbol();
         this.state = 30;
-        this.dir();
+        this.symbol();
         this.state = 31;
-        this.statename();
+        this.symbol();
+        this.state = 32;
+        this.dir();
+        this.state = 33;
+        this.state();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -375,7 +377,66 @@ TuringMachineParser.prototype.statename = function() {
     this.enterRule(localctx, 6, TuringMachineParser.RULE_statename);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 33;
+        this.state = 35;
+        this.match(TuringMachineParser.ALPNUM_PLUS);
+    } catch (re) {
+    	if(re instanceof antlr4.error.RecognitionException) {
+	        localctx.exception = re;
+	        this._errHandler.reportError(this, re);
+	        this._errHandler.recover(this, re);
+	    } else {
+	    	throw re;
+	    }
+    } finally {
+        this.exitRule();
+    }
+    return localctx;
+};
+
+function StateContext(parser, parent, invokingState) {
+	if(parent===undefined) {
+	    parent = null;
+	}
+	if(invokingState===undefined || invokingState===null) {
+		invokingState = -1;
+	}
+	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    this.parser = parser;
+    this.ruleIndex = TuringMachineParser.RULE_state;
+    return this;
+}
+
+StateContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+StateContext.prototype.constructor = StateContext;
+
+StateContext.prototype.ALPNUM_PLUS = function() {
+    return this.getToken(TuringMachineParser.ALPNUM_PLUS, 0);
+};
+
+StateContext.prototype.enterRule = function(listener) {
+    if(listener instanceof TuringMachineListener ) {
+        listener.enterState(this);
+	}
+};
+
+StateContext.prototype.exitRule = function(listener) {
+    if(listener instanceof TuringMachineListener ) {
+        listener.exitState(this);
+	}
+};
+
+
+
+
+TuringMachineParser.StateContext = StateContext;
+
+TuringMachineParser.prototype.state = function() {
+
+    var localctx = new StateContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 8, TuringMachineParser.RULE_state);
+    try {
+        this.enterOuterAlt(localctx, 1);
+        this.state = 37;
         this.match(TuringMachineParser.ALPNUM_PLUS);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -439,11 +500,11 @@ TuringMachineParser.SymbolContext = SymbolContext;
 TuringMachineParser.prototype.symbol = function() {
 
     var localctx = new SymbolContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 8, TuringMachineParser.RULE_symbol);
+    this.enterRule(localctx, 10, TuringMachineParser.RULE_symbol);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 35;
+        this.state = 39;
         _la = this._input.LA(1);
         if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC))) !== 0))) {
         this._errHandler.recoverInline(this);
@@ -502,11 +563,11 @@ TuringMachineParser.DirContext = DirContext;
 TuringMachineParser.prototype.dir = function() {
 
     var localctx = new DirContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 10, TuringMachineParser.RULE_dir);
+    this.enterRule(localctx, 12, TuringMachineParser.RULE_dir);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 37;
+        this.state = 41;
         _la = this._input.LA(1);
         if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.T__0) | (1 << TuringMachineParser.T__1) | (1 << TuringMachineParser.WILDCARD))) !== 0))) {
         this._errHandler.recoverInline(this);

@@ -7,31 +7,60 @@
 	<body>
 		
 		<div>
-			<textarea id="turingInput"></textarea>
+			<textarea id="turingInput">
+[s0] {
+	0 _ r 1o
+	1 _ r 1i
+	_ _ * accept
+}
+
+[1o] {
+	_ _ l 2o
+	* * r 1o
+}
+
+[1i] {
+	_ _ l 2i
+	* * r 1i
+}
+
+</textarea>
 		</div>
 		
 		<script src="lib/require.js"></script>
-		<script src="grammar/TuringMachineLexer.js"></script>
-		<script src="grammar/TuringMachineListener.js"></script>
-		<script src="grammar/TuringMachineParser.js"></script>
 		
 		<script>
-			//	var input = document.getElementById("turingInput").value;
+			var input = document.getElementById("turingInput").value;
 			
-			function evaluate(input) {
-				var antlr4 = require("antlr4/index");
-				
-				var chars = new antlr4.InputStream(input);
-				var lexer = new TuringMachineLexer.TuringMachineLexer(chars);
-				
-				var tokens = new antlr4.CommonTokenStream(lexer);
-				
-				var parser = new TuringMachineParser.TuringMachineParser(tokens);
-				
-				parser.buildParseTrees = true;
-				
-				var tree = parser.StartRule();
-			}
+			var antlr4 = require("antlr4/index");
+			
+			var TuringMachineLexer = require("grammar/TuringMachineLexer.js");
+			var TuringMachineListener = require("grammar/TuringMachineListener.js");
+			var TuringMachineParser = require("grammar/TuringMachineParser.js");
+			
+		</script>
+		
+		<script>
+			
+			var chars = new antlr4.InputStream(input);
+			var lexer = new TuringMachineLexer.TuringMachineLexer(chars);
+			
+			var tokens = new antlr4.CommonTokenStream(lexer);
+			
+			var parser = new TuringMachineParser.TuringMachineParser(tokens);
+			
+			parser.buildParseTrees = true;
+			
+			var tree = parser.r();
+			
+			// Actually do the walking
+			
+			var evaluator = new TuringMachineListener.TuringMachineListener();
+			
+			antlr4.tree.ParseTreeWalker.DEFAULT.walk(evaluator, tree);
+			
+			console.log(evaluator.states);
+			
 		</script>
 	</body>
 </html>
