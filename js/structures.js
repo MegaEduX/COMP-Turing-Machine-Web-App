@@ -16,8 +16,6 @@ function Tuple(cs, nsy, d, nst) {
 function State(stateName) {
 	this.name = stateName;
 	this.tuples = [];
-	
-	console.log('Created state named ' + this.name);
 }
 
 State.prototype.addTuple = function(tuple) {

@@ -108,7 +108,9 @@
 			
 			var TM = new Machine(tape, evaluator.states, 's0');
 			
-			TM.run();
+			var result = TM.run();
+			
+			alert('Tape: [' + result.tape.tape.join(' ') + ']\nResult: ' + result.result);
 			
 		</script>
 	</body>
