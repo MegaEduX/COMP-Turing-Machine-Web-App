@@ -12,23 +12,23 @@ function Tape(t) {
 }
 
 Tape.prototype.currentSymbol = function() {
-	return tape[this.currentIndex];
+	return this.tape[this.currentIndex];
 };
 
 Tape.prototype.moveRight = function() {
-	currentIndex--;
+	this.currentIndex--;
 	
-	if (currentIndex == -1) {
+	if (this.currentIndex == -1) {
 		this.tape.unshift(' ');
 		
-		currentIndex = 0;	
+		this.currentIndex = 0;	
 	}
 };
 
 Tape.prototype.moveLeft = function() {
-	currentIndex++;
+	this.currentIndex++;
 	
-	if (currentIndex == this.tape.length)
+	if (this.currentIndex == this.tape.length)
 		this.tape.push(' ');
 };
 
@@ -50,21 +50,23 @@ function Result(t, r) {
  * 		Turing Machine Class
  */
 
-function TuringMachine(it, s, ss) {
-	this.inputTape = Tape(it);
+function Machine(it, s, ss) {
+	this.inputTape = new Tape(it);
 	this.states = s;
 	this.startState = ss;
 }
 
-TuringMachine.prototype.run = function() {
+Machine.prototype.run = function() {
 	var tape = this.inputTape;
-	
-	if (!this.validateInputTape())
-		return false;
 	
 	var state = this.getStateNamed(this.startState);
 	
+	console.log('Start State Name: ' + this.startState);
+	console.log('Start State Object: ' + state);
+	
 	while (true) {
+		console.log('Current State: ' + state);
+		
 		var tp = this.getTupleFromState(state, tape.currentSymbol());
 		
 		tape.replaceCurrentSymbol(tp.nextSymbol);
@@ -81,31 +83,51 @@ TuringMachine.prototype.run = function() {
 	}
 };
 
-TuringMachine.prototype.validateStates = function() {
+Machine.prototype.validateStates = function() {
 	var names = [];
 	
-	for (var state in this.states)
+	this.states.forEach(function(state) {
 		names.push(state.name);
+	});
 	
-	for (var state in this.states)
+	this.states.forEach(function(state) {
 		if (!names.contains(state.nextState))
 			return false;
+	});
 	
 	return true;
 };
 
-TuringMachine.prototype.getStateNamed = function(name) {
-	for (var state in this.states)
-		if (state.name == name || state.name == '*')
-			return state;
+Machine.prototype.getStateNamed = function(name) {
+	var foundState = null;
 	
-	return null;
+	this.states.some(function(state) {
+		console.log('Found state ' + state.name);
+		
+		if (state.name == name || state.name == '*') {
+			foundState = state;
+			
+			return true;
+		}
+		
+		return false;
+	});
+	
+	return foundState;
 };
 
-TuringMachine.prototype.getTupleFromState = function(state, currentSymbol) {
-	for (var tuple in state.tuples)
-		if (tuple.currentSymbol == currentSymbol || tuple.currentSymbol == '*')
-			return tuple;
+Machine.prototype.getTupleFromState = function(state, currentSymbol) {
+	var foundTuple = null;
 	
-	return tuple;
+	state.tuples.some(function(tuple) {
+		if (tuple.currentSymbol == currentSymbol || tuple.currentSymbol == '*') {
+			foundTuple = tuple;
+			
+			return true;
+		}
+		
+		return false;
+	});
+	
+	return foundTuple;
 };

@@ -8,10 +8,16 @@
 		
 		<div>
 			<textarea id="turingInput">
+
+/*	
+ *	Checks if the input is a binary palindrome.
+ *	Taken and adapted from http://morphett.info/turing/turing.html
+ */
+
 [s0] {
 	0 _ r 1o
 	1 _ r 1i
-	_ _ * accept
+	_ _ * acc
 }
 
 [1o] {
@@ -24,11 +30,51 @@
 	* * r 1i
 }
 
-</textarea>
+[2o] {
+	0 _ l 3
+	_ _ * acc
+	* * * rej
+}
+
+[2i] {
+	1 _ l 3
+	_ _ * acc
+	* * * rej
+}
+
+[3] {
+	_ _ * acc
+	* * l 4
+}
+
+[4] {
+	* * l 4
+	_ _ r 0
+}
+
+[acc] {
+	* : r acc2
+}
+
+[acc2] {
+	* ) * accept
+}
+
+[rej] {
+	_ : r rej2
+	* _ l rej
+}
+
+[rej2] {
+	* ( * reject
+}
+
+
+			</textarea>
 		</div>
 		
 		<script src="lib/require.js"></script>
-		<script src="js/structures.js"></script
+		<script src="js/structures.js"></script>
 		<script src="js/machine.js"></script>
 		
 		<script>
@@ -58,7 +104,11 @@
 			
 			console.log(evaluator.states);
 			
-			var TM = new TuringMachine([1, 0, 0, 1, 0, 0, 1], '', '');
+			var tape = [1, 0, 0, 1, 0, 0, 1];
+			
+			var TM = new Machine(tape, evaluator.states, 's0');
+			
+			TM.run();
 			
 		</script>
 	</body>
