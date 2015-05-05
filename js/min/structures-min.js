@@ -1,0 +1,1 @@
+function Tuple(t,e,i,n){this.currentSymbol=t,this.nextSymbol=e,this.direction=i,this.nextState=n}function State(t){this.name=t,this.tuples=[]}State.prototype.addTuple=function(t){this.tuples.push(t)};

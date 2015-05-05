@@ -28,8 +28,11 @@
 		</div>
 		
 		<script src="lib/require.js"></script>
+		<script src="js/structures.js"></script
+		<script src="js/machine.js"></script>
 		
 		<script>
+			
 			var input = document.getElementById("turingInput").value;
 			
 			var antlr4 = require("antlr4/index");
@@ -37,10 +40,6 @@
 			var TuringMachineLexer = require("grammar/TuringMachineLexer.js");
 			var TuringMachineListener = require("grammar/TuringMachineListener.js");
 			var TuringMachineParser = require("grammar/TuringMachineParser.js");
-			
-		</script>
-		
-		<script>
 			
 			var chars = new antlr4.InputStream(input);
 			var lexer = new TuringMachineLexer.TuringMachineLexer(chars);
@@ -53,13 +52,13 @@
 			
 			var tree = parser.r();
 			
-			// Actually do the walking
-			
 			var evaluator = new TuringMachineListener.TuringMachineListener();
 			
 			antlr4.tree.ParseTreeWalker.DEFAULT.walk(evaluator, tree);
 			
 			console.log(evaluator.states);
+			
+			var TM = new TuringMachine([1, 0, 0, 1, 0, 0, 1], '', '');
 			
 		</script>
 	</body>
