@@ -7,7 +7,7 @@
 	<body>
 		
 		<div>
-			<textarea id="turingInput">
+			<textarea id="turingInput" rows="65" cols="100">
 
 /*	
  *	Checks if the input is a binary palindrome.
@@ -31,25 +31,25 @@
 }
 
 [2o] {
-	0 _ l 3
+	0 _ l 3a
 	_ _ * acc
 	* * * rej
 }
 
 [2i] {
-	1 _ l 3
+	1 _ l 3a
 	_ _ * acc
 	* * * rej
 }
 
-[3] {
+[3a] {
 	_ _ * acc
-	* * l 4
+	* * l 4a
 }
 
-[4] {
-	* * l 4
-	_ _ r 0
+[4a] {
+	_ _ r s0
+	* * l 4a
 }
 
 [acc] {
@@ -68,7 +68,6 @@
 [rej2] {
 	* ( * reject
 }
-
 
 			</textarea>
 		</div>

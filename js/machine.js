@@ -16,6 +16,13 @@ Tape.prototype.currentSymbol = function() {
 };
 
 Tape.prototype.moveRight = function() {
+	this.currentIndex++;
+	
+	if (this.currentIndex == this.tape.length)
+		this.tape.push('_');
+};
+
+Tape.prototype.moveLeft = function() {
 	this.currentIndex--;
 	
 	if (this.currentIndex == -1) {
@@ -23,13 +30,6 @@ Tape.prototype.moveRight = function() {
 		
 		this.currentIndex = 0;	
 	}
-};
-
-Tape.prototype.moveLeft = function() {
-	this.currentIndex++;
-	
-	if (this.currentIndex == this.tape.length)
-		this.tape.push('_');
 };
 
 Tape.prototype.replaceCurrentSymbol = function(s) {
@@ -61,11 +61,10 @@ Machine.prototype.run = function() {
 	
 	var state = this.getStateNamed(this.startState);
 	
-	console.log('Start State Name: ' + this.startState);
-	console.log('Start State Object: ' + state);
+	console.log('Start State: ' + this.startState);
 	
 	while (true) {
-		console.log('Current State: ' + state);
+		console.log('Current State: ' + state.name);
 		
 		var tp = this.getTupleFromState(state, tape.currentSymbol());
 		
@@ -83,7 +82,7 @@ Machine.prototype.run = function() {
 	}
 };
 
-Machine.prototype.step = function() {
+/*	Machine.prototype.step = function() {
 	var tape = this.inputTape;
 	
 	var state = this.getStateNamed(this.startState);
@@ -109,7 +108,7 @@ Machine.prototype.step = function() {
 	
 	this.inputTape = tape;
 	this.startState = tp.nextState;
-}
+}	*/
 
 Machine.prototype.validateStates = function() {
 	var names = [];
