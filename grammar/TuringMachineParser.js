@@ -5,11 +5,11 @@ var TuringMachineListener = require('./TuringMachineListener').TuringMachineList
 var grammarFileName = "TuringMachine.g4";
 
 var serializedATN = ["\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
-    "\3\16*\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n",
+    "\3\20*\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n",
     "\2\r\2\16\2\21\3\3\3\3\3\3\3\3\3\3\6\3\31\n\3\r\3\16\3\32\3\3\3\3\3",
     "\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\2\2\b\2\4\6\b\n\f\2\4",
-    "\4\2\t\t\f\r\4\2\3\4\f\f%\2\17\3\2\2\2\4\23\3\2\2\2\6\36\3\2\2\2\b#",
-    "\3\2\2\2\n%\3\2\2\2\f\'\3\2\2\2\16\20\5\4\3\2\17\16\3\2\2\2\20\21\3",
+    "\4\2\t\t\f\16\4\2\3\4\f\f%\2\17\3\2\2\2\4\23\3\2\2\2\6\36\3\2\2\2\b",
+    "#\3\2\2\2\n%\3\2\2\2\f\'\3\2\2\2\16\20\5\4\3\2\17\16\3\2\2\2\20\21\3",
     "\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\3\3\2\2\2\23\24\7\5\2\2\24\25",
     "\5\b\5\2\25\26\7\6\2\2\26\30\7\7\2\2\27\31\5\6\4\2\30\27\3\2\2\2\31",
     "\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34\35\7\b\2\2",
@@ -29,7 +29,7 @@ var literalNames = [ 'null', "'l'", "'r'", "'['", "']'", "'{'", "'}'", 'null',
 
 var symbolicNames = [ 'null', 'null', 'null', "SN_BEG", "SN_END", "STATE_BEG", 
                       "STATE_END", "ALPNUM", "ALPNUM_PLUS", "WHITESP", "WILDCARD", 
-                      "UNDERSC", "COMMENT" ];
+                      "UNDERSC", "MISC", "ANYCHAR", "COMMENT" ];
 
 var ruleNames =  [ "r", "statedef", "tuple", "statename", "symbol", "dir" ];
 
@@ -63,7 +63,9 @@ TuringMachineParser.ALPNUM_PLUS = 8;
 TuringMachineParser.WHITESP = 9;
 TuringMachineParser.WILDCARD = 10;
 TuringMachineParser.UNDERSC = 11;
-TuringMachineParser.COMMENT = 12;
+TuringMachineParser.MISC = 12;
+TuringMachineParser.ANYCHAR = 13;
+TuringMachineParser.COMMENT = 14;
 
 TuringMachineParser.RULE_r = 0;
 TuringMachineParser.RULE_statedef = 1;
@@ -235,7 +237,7 @@ TuringMachineParser.prototype.statedef = function() {
             this.state = 24; 
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC))) !== 0));
+        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC) | (1 << TuringMachineParser.MISC))) !== 0));
         this.state = 26;
         this.match(TuringMachineParser.STATE_END);
     } catch (re) {
@@ -419,6 +421,10 @@ SymbolContext.prototype.WILDCARD = function() {
     return this.getToken(TuringMachineParser.WILDCARD, 0);
 };
 
+SymbolContext.prototype.MISC = function() {
+    return this.getToken(TuringMachineParser.MISC, 0);
+};
+
 SymbolContext.prototype.enterRule = function(listener) {
     if(listener instanceof TuringMachineListener ) {
         listener.enterSymbol(this);
@@ -445,7 +451,7 @@ TuringMachineParser.prototype.symbol = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 35;
         _la = this._input.LA(1);
-        if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC))) !== 0))) {
+        if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << TuringMachineParser.ALPNUM) | (1 << TuringMachineParser.WILDCARD) | (1 << TuringMachineParser.UNDERSC) | (1 << TuringMachineParser.MISC))) !== 0))) {
         this._errHandler.recoverInline(this);
         }
         else {
