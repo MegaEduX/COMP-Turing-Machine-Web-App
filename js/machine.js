@@ -37,6 +37,18 @@ Tape.prototype.replaceCurrentSymbol = function(s) {
 		this.tape[this.currentIndex] = s;
 };
 
+Tape.prototype.compressedTape = function() {
+	var compressedTape = this.tape;
+	
+	while (compressedTape[0] == '_')
+		compressedTape.shift();
+	
+	while (compressedTape[compressedTape.length - 1] == '_')
+		compressedTape.pop();
+	
+	return compressedTape;
+}
+
 /*
  * 		Result Class
  */
