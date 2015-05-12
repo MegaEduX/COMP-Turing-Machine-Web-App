@@ -94,33 +94,26 @@ Machine.prototype.run = function() {
 	}
 };
 
-/*	Machine.prototype.step = function() {
+Machine.prototype.step = function() {
 	var tape = this.inputTape;
-	
+
 	var state = this.getStateNamed(this.startState);
-	
-	console.log('Start State Name: ' + this.startState);
-	console.log('Start State Object: ' + state);
-	
-	console.log('Current State: ' + state);
+
+	console.log('Start State: ' + this.startState);
+
+	console.log('Current State: ' + state.name);
 	
 	var tp = this.getTupleFromState(state, tape.currentSymbol());
 	
 	tape.replaceCurrentSymbol(tp.nextSymbol);
 	
-	if (tp.nextState == 'accept' || tp.nextState == 'reject')
-		return new Result(tape, tp.nextState);
-	
-	//	state = this.getStateNamed(tp.nextState);
+	this.startState = tp.nextState;
 	
 	if (tp.direction == 'l')
 		tape.moveLeft();
 	else if (tp.direction == 'r')
 		tape.moveRight();
-	
-	this.inputTape = tape;
-	this.startState = tp.nextState;
-}	*/
+};
 
 Machine.prototype.validateStates = function() {
 	var names = [];
