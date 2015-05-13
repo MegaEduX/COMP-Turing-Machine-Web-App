@@ -1,0 +1,1 @@
+Due to some limitations on the used libraries, this project must be placed on a web server before being ran (simply double-clicking the index.html file and opening it on a browser will not yield acceptable results).
