@@ -1,3 +1,23 @@
+function UnknownStateException(state) {
+	this.state = state;
+}
+
+UnknownStateException.prototype.constructor = UnknownStateException;
+
+/*
+ * 		Array Extension
+ */
+
+Array.prototype.contains = function(obj) {
+	var i = this.length;
+	while (i--) {
+		if (this[i] === obj) {
+			return true;
+		}
+	}
+	return false;
+}
+
 /*
  *		Tape Class
  */
@@ -122,12 +142,27 @@ Machine.prototype.validateStates = function() {
 		names.push(state.name);
 	});
 	
-	this.states.forEach(function(state) {
-		if (!names.contains(state.nextState))
-			return false;
+	var ret = true;
+	
+	this.states.every(function (state, idx, array) {
+		state.tuples.every(function(tuple, i, a) {
+			var n = tuple.nextState;
+			
+			console.log(n);
+			
+			if (!names.contains(n) && n != 'accept' && n != 'reject') {
+				ret = false;
+				
+				throw new UnknownStateException(n);
+			}
+			
+			return true;
+		});
+		
+		return true;
 	});
 	
-	return true;
+	return ret;
 };
 
 Machine.prototype.getStateNamed = function(name) {

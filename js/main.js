@@ -48,6 +48,10 @@ $("#save").click(function() {
 
 var debugMachine = null;
 
+function InvalidStatesException() {
+	
+}
+
 function createMachine() {
 	var input = ace.edit("editor").getValue();
 
@@ -56,6 +60,7 @@ function createMachine() {
 	var TuringMachineLexer = require("grammar/TuringMachineLexer.js");
 	var TuringMachineListener = require("grammar/TuringMachineListener.js");
 	var TuringMachineParser = require("grammar/TuringMachineParser.js");
+	var TuringMachineErrorListener = require("grammar/TuringMachineErrorListener.js");
 
 	var chars = new antlr4.InputStream(input);
 	var lexer = new TuringMachineLexer.TuringMachineLexer(chars);
@@ -63,7 +68,12 @@ function createMachine() {
 	var tokens = new antlr4.CommonTokenStream(lexer);
 
 	var parser = new TuringMachineParser.TuringMachineParser(tokens);
-
+	
+	var errorListener = new TuringMachineErrorListener.TuringMachineErrorListener();
+	
+	parser.removeErrorListeners();
+	parser.addErrorListener(errorListener);
+	
 	parser.buildParseTrees = true;
 
 	var tree = parser.r();
@@ -77,12 +87,33 @@ function createMachine() {
 	var tape = document.getElementById("tape").value.split('');
 
 	var TM = new Machine(tape, evaluator.states, 's0');
+	
+	if (!TM.validateStates())
+		throw new InvalidStatesException();
 
 	return TM;
 }
 
-$("#validate").click(function() {
+function spawnModal(title, message) {
+	$("#modal").modal('show');
+	
+	$("#modalTitle").html(title);
+	$("#modalMessage").html(message);
+}
 
+$("#validate").click(function() {
+	try {
+		createMachine();
+	} catch (e) {
+		if (e instanceof UnknownStateException)
+			spawnModal('Unknown State!', e.state);
+		else
+			spawnModal('Syntax Error!', e.error);
+		
+		return;
+	}
+	
+	spawnModal('Success!', 'No errors found.');
 });
 
 function printDebugRep() {
@@ -106,21 +137,48 @@ function printDebugRep() {
 }
 
 $("#openDebug").click(function() {
-	debugMachine = createMachine();
-
-	$("#debug").modal('show');
-	
-	$("#tmControl").html('<center><a href="#" class="btn btn-primary" id="tmDebugNext">Next</a></center>');
-	
-	printDebugRep();
+	try {
+		debugMachine = createMachine();
+		
+		$("#debug").modal('show');
+		
+		$("#tmControl").html('<center><a href="#" class="btn btn-primary" id="tmDebugNext">Next</a></center>');
+		
+		printDebugRep();
+	} catch (e) {
+		spawnModal('Error!', 'An error has occurred - please validate your code first!');
+	}
 });
 
 $("#run").click(function() {
-	var TM = createMachine();
-
-	var result = TM.run();
-
-	alert('Tape: [' + result.tape.compressedTape().join(' ') + ']\nResult: ' + result.result);
+	try {
+		var TM = createMachine();
+			
+		var result = TM.run();
+		
+		var newRepresentation = "";
+		
+		var idx = TM.inputTape.currentIndex;
+		
+		TM.inputTape.tape.forEach(function(element, index, array) {
+			if (index == idx)
+				newRepresentation += '<span class="tm-current">';
+		
+			newRepresentation += element;
+		
+			if (index == idx)
+				newRepresentation += '</span>';
+		});
+		
+		$("#runStateName").html(result.result);
+		
+		$("#tmRunTape").html(newRepresentation);
+			
+		$("#runMdl").modal('show');
+	} catch (e) {
+		console.log(e);
+		spawnModal('Error!', 'An error has occurred - please validate your code first!');
+	}
 });
 
 $("#debug").on('click', '#tmDebugNext', function() {
@@ -153,6 +211,7 @@ $("#exampleBinaryPalindrome").click(function() {
 });
 
 var editor = ace.edit("editor");
+
 editor.setTheme("ace/theme/chrome");
 editor.setValue(binaryPalindrome());
 editor.setOptions({
