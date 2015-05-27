@@ -210,6 +210,23 @@ $("#exampleBinaryPalindrome").click(function() {
 	ace.edit("editor").setValue(binaryPalindrome());
 });
 
+$("#exampleBusyBeaver").click(function() {
+	ace.edit("editor").setValue(busyBeaver());
+});
+
+$("#binaryMultiplicationMachine").click(function() {
+	ace.edit("editor").setValue(binaryMultiplication());
+});
+
+$("#binaryToDec").click(function() {
+	ace.edit("editor").setValue(binaryToDecimal());
+});
+
+$("#entscheidungsproblem").click(function() {
+	ace.edit("editor").setValue(entscheidungsproblem());
+});
+
+
 var editor = ace.edit("editor");
 
 editor.setTheme("ace/theme/chrome");
