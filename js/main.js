@@ -207,30 +207,34 @@ $("#debug").on('click', '#tmDebugNext', function() {
 });
 
 $("#exampleBinaryPalindrome").click(function() {
-	ace.edit("editor").setValue(binaryPalindrome());
+	ace.edit("editor").setValue(binaryPalindrome().program);
+	$("#tape").val(binaryPalindrome().tape);
 });
 
 $("#exampleBusyBeaver").click(function() {
-	ace.edit("editor").setValue(busyBeaver());
+	ace.edit("editor").setValue(busyBeaver().program);
+	$("#tape").val(busyBeaver().tape);
 });
 
 $("#binaryMultiplicationMachine").click(function() {
-	ace.edit("editor").setValue(binaryMultiplication());
+	ace.edit("editor").setValue(binaryMultiplication().program);
+	$("#tape").val(binaryMultiplication().tape);
 });
 
 $("#binaryToDec").click(function() {
-	ace.edit("editor").setValue(binaryToDecimal());
+	ace.edit("editor").setValue(binaryToDecimal().program);
+	$("#tape").val(binaryToDecimal().tape);
 });
 
 $("#entscheidungsproblem").click(function() {
-	ace.edit("editor").setValue(entscheidungsproblem());
-});
-
+	ace.edit("editor").setValue(entscheidungsproblem().program);
+	$("#tape").val(entscheidungsproblem().tape);
+})
 
 var editor = ace.edit("editor");
 
 editor.setTheme("ace/theme/chrome");
-editor.setValue(binaryPalindrome());
+editor.setValue(binaryPalindrome().program);
 editor.setOptions({
 	maxLines: editor.session.getLength()
 });
