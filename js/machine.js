@@ -4,6 +4,12 @@ function UnknownStateException(state) {
 
 UnknownStateException.prototype.constructor = UnknownStateException;
 
+function DuplicateStatesException(states) {
+	this.states = states;
+}
+
+DuplicateStatesException.prototype.constructor
+
 /*
  * 		Array Extension
  */
@@ -135,12 +141,34 @@ Machine.prototype.step = function() {
 		tape.moveRight();
 };
 
+function findDuplicates(array) {
+	var dupes = [];
+	
+	while (array.length) {
+		var elem = array.shift();
+		
+		if (array.contains(elem))
+			dupes.push(elem);
+	}
+	
+	return dupes;
+}
+
 Machine.prototype.validateStates = function() {
 	var names = [];
 	
 	this.states.forEach(function(state) {
 		names.push(state.name);
 	});
+	
+	console.log('Started Duplicate Search...');
+	
+	var dupes = findDuplicates(names.slice());
+	
+	console.log('Done!');
+	
+	if (dupes.length)
+		throw new DuplicateStatesException(dupes);
 	
 	var ret = true;
 	

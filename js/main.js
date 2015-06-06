@@ -229,7 +229,17 @@ $("#binaryToDec").click(function() {
 $("#entscheidungsproblem").click(function() {
 	ace.edit("editor").setValue(entscheidungsproblem().program);
 	$("#tape").val(entscheidungsproblem().tape);
-})
+});
+
+$("#err-missingState").click(function() {
+	ace.edit("editor").setValue(missingState().program);
+	$("#tape").val(missingState().tape);
+});
+
+$("#err-missingToken").click(function() {
+	ace.edit("editor").setValue(missingToken().program);
+	$("#tape").val(missingToken().tape);
+});
 
 var editor = ace.edit("editor");
 
