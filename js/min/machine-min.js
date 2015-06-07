@@ -1,1 +1,237 @@
-function UnknownStateException(t){this.state=t}function DuplicateStatesException(t){this.states=t}function Tape(t){t.length||(t=["_"]),this.tape=t,this.currentIndex=0}function Result(t,e){this.tape=t,this.result=e}function Machine(t,e,n){this.inputTape=new Tape(t),this.states=e,this.startState=n}function findDuplicates(t){for(var e=[];t.length;){var n=t.shift();t.contains(n)&&e.push(n)}return e}UnknownStateException.prototype.constructor=UnknownStateException,DuplicateStatesException.prototype.constructor,Array.prototype.contains=function(t){for(var e=this.length;e--;)if(this[e]===t)return!0;return!1},Tape.prototype.currentSymbol=function(){return this.tape[this.currentIndex]},Tape.prototype.moveRight=function(){this.currentIndex++,this.currentIndex==this.tape.length&&this.tape.push("_")},Tape.prototype.moveLeft=function(){this.currentIndex--,-1==this.currentIndex&&(this.tape.unshift("_"),this.currentIndex=0)},Tape.prototype.replaceCurrentSymbol=function(t){"*"!=t&&(this.tape[this.currentIndex]=t)},Tape.prototype.compressedTape=function(){for(var t=this.tape;"_"==t[0];)t.shift();for(;"_"==t[t.length-1];)t.pop();return t},Machine.prototype.run=function(){var t=this.inputTape,e=this.getStateNamed(this.startState);for(console.log("Start State: "+this.startState);;){console.log("Current State: "+e.name);var n=this.getTupleFromState(e,t.currentSymbol());if(t.replaceCurrentSymbol(n.nextSymbol),"accept"==n.nextState||"reject"==n.nextState)return new Result(t,n.nextState);e=this.getStateNamed(n.nextState),"l"==n.direction?t.moveLeft():"r"==n.direction&&t.moveRight()}},Machine.prototype.step=function(){var t=this.inputTape,e=this.getStateNamed(this.startState);console.log("Start State: "+this.startState),console.log("Current State: "+e.name);var n=this.getTupleFromState(e,t.currentSymbol());t.replaceCurrentSymbol(n.nextSymbol),this.startState=n.nextState,"l"==n.direction?t.moveLeft():"r"==n.direction&&t.moveRight()},Machine.prototype.validateStates=function(){var t=[];this.states.forEach(function(e){t.push(e.name)}),console.log("Started Duplicate Search...");var e=findDuplicates(t.slice());if(console.log("Done!"),e.length)throw new DuplicateStatesException(e);var n=!0;return this.states.every(function(e,r,o){return e.tuples.every(function(e,r,o){var a=e.nextState;if(console.log(a),!t.contains(a)&&"accept"!=a&&"reject"!=a)throw n=!1,new UnknownStateException(a);return!0}),!0}),n},Machine.prototype.getStateNamed=function(t){var e=null;return this.states.some(function(n){return n.name==t||"*"==n.name?(e=n,!0):!1}),e},Machine.prototype.getTupleFromState=function(t,e){var n=null;return t.tuples.some(function(t){return t.currentSymbol==e||"*"==t.currentSymbol?(n=t,!0):!1}),n};
+/*
+ * 		Exceptions
+ */
+
+function UnknownStateException(state) {
+	this.state = state;
+}
+
+UnknownStateException.prototype.constructor = UnknownStateException;
+
+function DuplicateStatesException(states) {
+	this.states = states;
+}
+
+DuplicateStatesException.prototype.constructor = DuplicateStatesException;
+
+function StartStateNotFoundException(states) {
+	this.states = states;
+}
+
+StartStateNotFoundException.prototype.constructor = StartStateNotFoundException;
+
+/*
+ * 		Array Extension
+ */
+
+Array.prototype.contains = function(obj) {
+	var i = this.length;
+	
+	while (i--)
+		if (this[i] === obj)
+			return true;
+	
+	return false;
+}
+
+/*
+ *		Tape Class
+ */
+
+function Tape(t) {
+	if (!t.length)
+		t = ['_'];
+	
+	this.tape = t;
+	
+	this.currentIndex = 0;
+}
+
+Tape.prototype.currentSymbol = function() {
+	return this.tape[this.currentIndex];
+};
+
+Tape.prototype.moveRight = function() {
+	this.currentIndex++;
+	
+	if (this.currentIndex == this.tape.length)
+		this.tape.push('_');
+};
+
+Tape.prototype.moveLeft = function() {
+	this.currentIndex--;
+	
+	if (this.currentIndex == -1) {
+		this.tape.unshift('_');
+		
+		this.currentIndex = 0;	
+	}
+};
+
+Tape.prototype.replaceCurrentSymbol = function(s) {
+	if (s != '*')
+		this.tape[this.currentIndex] = s;
+};
+
+Tape.prototype.compressedTape = function() {
+	var compressedTape = this.tape;
+	
+	while (compressedTape[0] == '_')
+		compressedTape.shift();
+	
+	while (compressedTape[compressedTape.length - 1] == '_')
+		compressedTape.pop();
+	
+	return compressedTape;
+}
+
+/*
+ * 		Result Class
+ */
+
+function Result(t, r) {
+	this.tape = t;
+	this.result = r;
+}
+
+/*
+ * 		Turing Machine Class
+ */
+
+function Machine(it, s, ss) {
+	this.inputTape = new Tape(it);
+	this.states = s;
+	this.startState = ss;
+}
+
+Machine.prototype.run = function() {
+	var tape = this.inputTape;
+	
+	var state = this.getStateNamed(this.startState);
+	
+	console.log('Start State: ' + this.startState);
+	
+	while (true) {
+		console.log('Current State: ' + state.name);
+		
+		var tp = this.getTupleFromState(state, tape.currentSymbol());
+		
+		tape.replaceCurrentSymbol(tp.nextSymbol);
+		
+		if (tp.nextState == 'accept' || tp.nextState == 'reject')
+			return new Result(tape, tp.nextState);
+		
+		state = this.getStateNamed(tp.nextState);
+		
+		if (tp.direction == 'l')
+			tape.moveLeft();
+		else if (tp.direction == 'r')
+			tape.moveRight();
+	}
+};
+
+Machine.prototype.step = function() {
+	var tape = this.inputTape;
+
+	var state = this.getStateNamed(this.startState);
+
+	console.log('Start State: ' + this.startState);
+
+	console.log('Current State: ' + state.name);
+	
+	var tp = this.getTupleFromState(state, tape.currentSymbol());
+	
+	tape.replaceCurrentSymbol(tp.nextSymbol);
+	
+	this.startState = tp.nextState;
+	
+	if (tp.direction == 'l')
+		tape.moveLeft();
+	else if (tp.direction == 'r')
+		tape.moveRight();
+};
+
+function findDuplicates(array) {
+	var dupes = [];
+	
+	while (array.length) {
+		var elem = array.shift();
+		
+		if (array.contains(elem))
+			dupes.push(elem);
+	}
+	
+	return dupes;
+}
+
+Machine.prototype.validateStates = function() {
+	var names = [];
+	
+	this.states.forEach(function(state) {
+		names.push(state.name);
+	});
+	
+	var dupes = findDuplicates(names.slice());
+	
+	if (dupes.length)
+		throw new DuplicateStatesException(dupes);
+	
+	if (!names.contains('s0'))
+		throw new StartStateNotFoundException();
+	
+	var ret = true;
+	
+	this.states.every(function (state, idx, array) {
+		state.tuples.every(function(tuple, i, a) {
+			var n = tuple.nextState;
+			
+			console.log(n);
+			
+			if (!names.contains(n) && n != 'accept' && n != 'reject') {
+				ret = false;
+				
+				throw new UnknownStateException(n);
+			}
+			
+			return true;
+		});
+		
+		return true;
+	});
+	
+	return ret;
+};
+
+Machine.prototype.getStateNamed = function(name) {
+	var foundState = null;
+	
+	this.states.some(function(state) {
+		if (state.name == name || state.name == '*') {
+			foundState = state;
+			
+			return true;
+		}
+		
+		return false;
+	});
+	
+	return foundState;
+};
+
+Machine.prototype.getTupleFromState = function(state, currentSymbol) {
+	var foundTuple = null;
+	
+	state.tuples.some(function(tuple) {
+		if (tuple.currentSymbol == currentSymbol || tuple.currentSymbol == '*') {
+			foundTuple = tuple;
+			
+			return true;
+		}
+		
+		return false;
+	});
+	
+	return foundTuple;
+};
+
+

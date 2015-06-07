@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<h1 id="turingmachinecompiladores201420152s">Turing Machine (Compiladores, 2014/2015 2S)</h1>
+
+<h2 id="identificaçãodosautores:">Identificação dos Autores:</h2>
+
+<p><strong>Grupo</strong>: G53</p>
+
+<p><strong>Tema</strong>: JavaScript Turing Machine</p>
+
+<p><strong>Membros</strong>:</p>
+
+<pre><code> - Eduardo Almeida – 201204989 - ei12018@fe.up.pt
+ - João Almeida – 201206113 - ei12053@fe.up.pt
+ - Miguel Fernandes – 201105565 - ei12137@fe.up.pt
+ - Pedro Santiago – 201201737 - ei12044@fe.up.pt
+</code></pre>
+
+<h2 id="instruçõesdecompilação">Instruções de Compilação</h2>
+
+<p>Tendo sido o trabalho desenvolvido completamente em JavaScript, não é necessário qualquer tipo de (re)compilação após efetuar alterações ao código-fonte.</p>
+
+<p>No caso de serem efetuadas modificações à gramática, é necessário compilá-la para JavaScript com o seguinte comando:</p>
+
+<pre><code>antlr4 -Dlanguage=JavaScript TuringMachine.g4
+</code></pre>
+
+<p>E colocar os ficheiros resultantes da compilação na pasta <code>grammar</code>, não substituindo o ficheiro <code>TuringMachineListener.js</code>.</p>
+
+<p>No caso de serem efetuadas modificações extensivas, poderá ser necessário efetuaar modificações no ficheiro <code>TuringMachineListener.js</code>.</p>
+
+<h2 id="descriçãodosexemplos">Descrição dos Exemplos</h2>
+
+<p>Os exemplos estão incluídos na Web IDE, e é possível aceder aos mesmos a partir da sua interface.</p>
+
+<p>Cada um dos exemplos incluí uma descrição no topo do ficheiro.</p>
+
+<p>Estão incluídos 5 exemplos funcionais e 3 exemplos que demonstram a deteção de erros.</p>
+
+<h2 id="descriçãodeutilização">Descrição de Utilização</h2>
+
+<p>Para utilizar a aplicação web é apenas necessário colocá-la num servidor web e apontar o browser para o endereço do mesmo.</p>
+
+<p>Aí, o utilizador poderá desenvolver o seu código na interface web, podendo validá-lo / depurá-lo / executá-lo sem sair do browser.</p>
+
+<h2 id="análiselexical">Análise Lexical</h2>
+
+<p>O analisador lexical está localizado em <code>grammar/TuringMachineLexer.js</code>.</p>
+
+<p>Quando o ficheiro de entrada contém erros lexicais, é lançada uma exceção e o utilizador é alertado deste facto utilizando uma <code>modal view</code> do Bootstrap, sendo a compilação parada.</p>
+
+<h2 id="análisesintática">Análise Sintática</h2>
+
+<p>O analisador sintático está localizado em <code>grammar/TuringMachineParser.js</code>.</p>
+
+<p>Quando o ficheiro de entrada contém erros lexicais, é lançada uma exceção e o utilizador é alertado deste facto utilizando uma <code>modal view</code> do Bootstrap, sendo a compilação parada.</p>
+
+<h2 id="análisesemântica">Análise Semântica</h2>
+
+<p>O analisador sintático está localizado em <code>js/machine.js</code>.</p>
+
+<p>São implementadas as seguintes validações:</p>
+
+<ul>
+<li>Missing State - Impede a tentativa de efetuar um salto para um estado não existente.</li>
+<li>Missing Start State - Impede a tentativa de execução de uma máquina com um estado inicial indefinido.</li>
+<li>Duplicate State - Impede a criação de dois estados com o mesmo nome.</li>
+</ul>
+
+<p>Quando o ficheiro de entrada contém erros semânticos, é lançada uma exceção e o utilizador é alertado deste facto utilizando uma <code>modal view</code> do Bootstrap, sendo a compilação parada.</p>
+
+<h2 id="representaçãoõesintermédias">Representação(ões) Intermédia(s)</h2>
+
+<p>Cada &#8220;tuplo&#8221; tem uma representação em JavaScript:</p>
+
+<pre><code>function Tuple(cs, nsy, d, nst) {
+    this.currentSymbol = cs;
+    this.nextSymbol = nsy;
+    this.direction = d;
+    this.nextState = nst;
+}
+</code></pre>
+
+<p>Assim como cada &#8220;estado&#8221; (conjunto de &#8220;tuplos&#8221;):</p>
+
+<pre><code>function State(stateName) {
+    this.name = stateName;
+    this.tuples = [];
+}
+</code></pre>
+
+<p>E, finalmente, a máquina propriamente dita:</p>
+
+<pre><code>function Machine(it, s, ss) {
+    this.inputTape = new Tape(it);
+    this.states = s;
+    this.startState = ss;
+}
+</code></pre>
+
+<h2 id="geraçãodecódigo">Geração de Código</h2>
+
+<p>Não existe uma geração de código - o código é desenvolvido e interpretado dentro de uma Web IDE incluída no projeto, desenvolvida pelo grupo.</p>
+
+<h2 id="testes">Testes</h2>
+
+<p>Não foram desenvolvidos quaisquer testes.</p>
+
+<p>No entanto, e para compensar esta situação, validou-se a aplicação com 5 exemplos de código adaptados de uma outra máquina de turing também desenvolvida em JavaScript.</p>
+
+<h2 id="arquitetura">Arquitetura</h2>
+
+<p>A aplicação corre totalmente dentro de um browser, não sendo necessária a instalação de qualquer software adicional.</p>
+
+<p>São utilizadas as seguintes bibliotecas:</p>
+
+<ul>
+<li>ANTLR 4.5 (JavaScript Runtime)</li>
+<li>Ace Editor</li>
+<li>Bootstrap 3.3</li>
+</ul>
+
+<p><strong>Linguagem de Entrada</strong></p>
+
+<pre><code>[&lt;current state&gt;] {
+    &lt;current symbol&gt; &lt;new symbol&gt; &lt;direction&gt; &lt;new state&gt;
+    &lt;current symbol&gt; &lt;new symbol&gt; &lt;direction&gt; &lt;new state&gt;
+    ...
+}
+
+...
+</code></pre>
+
+<p>Em que:</p>
+
+<ul>
+<li>Current State: Nome do estado atual.
+
+<ul>
+<li>Tem de começar por uma letra, e pode conter tanto números como letras.</li>
+</ul></li>
+<li>Current Symbol: Símbolo onde a cabeça da máquina se encontra.
+
+<ul>
+<li>Qualquer carater alfanumérico.</li>
+</ul></li>
+<li>New Symbol: Símbolo a ser substituído no local onde a cabeça da máquina se encontra.
+
+<ul>
+<li>Qualquer carater alfanumérico.</li>
+</ul></li>
+<li>Direction: Direção para a qual a cabeça da máquina se moverá.
+
+<ul>
+<li><code>l</code> - Esquerda (Left).</li>
+<li><code>r</code> - Direita (Right).</li>
+<li><code>*</code> - Não mexer.</li>
+</ul></li>
+<li>New State: Estado a processar.
+
+<ul>
+<li>Tem de ser um estado existente, definido em <code>current state</code>.</li>
+</ul></li>
+</ul>
+
+<p>O estado inicial é sempre designado de <code>s0</code> e necessita de estar definido.</p>
+
+<p><strong>Output</strong></p>
+
+<p>A máquina de turing propriamente dita foi implementada totalmente em JavaScript pelo grupo, sendo o programa executado dentro do browser, e a resposta retornada no mesmo. Não são gerados quaisquer ficheiros &#8220;compilados&#8221; para exportação, dado que a máquina de turing é interpretada no browser.</p>
+
+<h2 id="pontospositivos">Pontos Positivos</h2>
+
+<p>Para além de todos os pontos pedidos, a aplicação web fornece uma IDE com todas as funcionalidades necessárias ao desenvolvimento de código para a linguagem:</p>
+
+<ul>
+<li>Funcionalidades I/O (New/Open/Save)</li>
+<li>Validação, Depuração e Execução de Código</li>
+<li>Exemplos para ajudar a perceber melhor a linguagem.</li>
+</ul>
+
+<h2 id="pontosnegativos">Pontos Negativos</h2>
+
+<p>De forma a melhorar o funcionamento da aplicação, seria positivo melhorar o sistema de execução de código, já que este não deteta loops infinitos, podendo tornar o browser irresponsivo se tal acontecer.</p>
+
+</body>
+</html>

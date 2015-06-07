@@ -25,3 +25,16 @@ State.prototype.addTuple = function(tuple) {
 State.prototype.getName = function() {
 	return this.name;
 }
+
+/*
+ * 		Program Class
+ */
+
+function Program(t, p) {
+	this.tape = t;
+	this.program = p;
+}
+
+Program.prototype.export = function() {
+	JSON.stringify(this);
+}

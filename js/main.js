@@ -21,9 +21,10 @@ function readSingleFile(e) {
 }
 
 function displayContents(contents) {
-	var decodedData = window.atob(contents);
-
-	ace.edit('editor').setValue(decodedData);
+	var decodedData = JSON.parse(window.atob(contents));
+	
+	$("#tape").val(decodedData[0]);
+	ace.edit('editor').setValue(decodedData[1]);
 }
 
 document.getElementById('file-input')
@@ -34,7 +35,12 @@ $("#open").click(function() {
 });
 
 $("#save").click(function() {
-	var encodedData = window.btoa(ace.edit("editor").getValue());
+	var encodedData = window.btoa(JSON.stringify([	
+									$("#tape").val(), 
+									ace.edit("editor").getValue()
+								]));
+	
+	console.log(encodedData);
 
 	var a = document.createElement('a');
 	a.href = 'data:application/octet-stream,' + encodedData;
@@ -107,6 +113,10 @@ $("#validate").click(function() {
 	} catch (e) {
 		if (e instanceof UnknownStateException)
 			spawnModal('Unknown State!', e.state);
+		if (e instanceof StartStateNotFoundException)
+			spawnModal('No Start State!', 'The state [s0] needs to exist.');
+		else if (e instanceof DuplicateStatesException)
+			spawnModal('Duplicate States!', 'The following duplicate states were found: [' + e.states + ']');
 		else
 			spawnModal('Syntax Error!', e.error);
 		
@@ -239,6 +249,11 @@ $("#err-missingState").click(function() {
 $("#err-missingToken").click(function() {
 	ace.edit("editor").setValue(missingToken().program);
 	$("#tape").val(missingToken().tape);
+});
+
+$("#err-duplicateStateDefinition").click(function() {
+	ace.edit("editor").setValue(duplicateState().program);
+	$("#tape").val(duplicateState().tape);
 });
 
 var editor = ace.edit("editor");

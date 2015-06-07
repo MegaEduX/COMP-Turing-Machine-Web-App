@@ -1,3 +1,7 @@
+/*
+ * 		Exceptions
+ */
+
 function UnknownStateException(state) {
 	this.state = state;
 }
@@ -8,7 +12,13 @@ function DuplicateStatesException(states) {
 	this.states = states;
 }
 
-DuplicateStatesException.prototype.constructor
+DuplicateStatesException.prototype.constructor = DuplicateStatesException;
+
+function StartStateNotFoundException(states) {
+	this.states = states;
+}
+
+StartStateNotFoundException.prototype.constructor = StartStateNotFoundException;
 
 /*
  * 		Array Extension
@@ -16,11 +26,11 @@ DuplicateStatesException.prototype.constructor
 
 Array.prototype.contains = function(obj) {
 	var i = this.length;
-	while (i--) {
-		if (this[i] === obj) {
+	
+	while (i--)
+		if (this[i] === obj)
 			return true;
-		}
-	}
+	
 	return false;
 }
 
@@ -161,14 +171,13 @@ Machine.prototype.validateStates = function() {
 		names.push(state.name);
 	});
 	
-	console.log('Started Duplicate Search...');
-	
 	var dupes = findDuplicates(names.slice());
-	
-	console.log('Done!');
 	
 	if (dupes.length)
 		throw new DuplicateStatesException(dupes);
+	
+	if (!names.contains('s0'))
+		throw new StartStateNotFoundException();
 	
 	var ret = true;
 	

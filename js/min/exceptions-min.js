@@ -1,1 +1,0 @@
-function UnknownStateException(t){this.state=t}function SyntaxErrorException(t){this.error=t}UnknownStateException.prototype.constructor=UnknownStateException,SyntaxErrorException.prototype.constructor=SyntaxErrorException;
