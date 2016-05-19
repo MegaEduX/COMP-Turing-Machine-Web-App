@@ -1,7 +1,7 @@
 Turing Machine (Compiladores, 2014/2015 2S)
 ===========================================
 
-[Live Preview](http://megaedux.github.io/COMP-Turing-Machine-Web-App/)
+[Live Preview](http://edualm.github.io/COMP-Turing-Machine-Web-App/)
 
 Identificação dos Autores:
 --------------------------
